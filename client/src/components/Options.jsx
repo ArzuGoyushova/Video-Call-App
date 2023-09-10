@@ -9,16 +9,23 @@ const Options = ({ children }) => {
     const { me, callAccepted, name, setName, callEnded, leaveCall, callUser, connectionRef } = useContext(SocketContext);
     const [idToCall, setIdToCall] = useState('');
 
-    const requestPermissions = async (idToCall) => {
+    const handleStartVideoCall = async () => {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-          setName(''); 
-          callUser(idToCall, stream);
+            const cameraPermission = await navigator.permissions.query({ name: 'camera' });
+            const microphonePermission = await navigator.permissions.query({ name: 'microphone' });
+
+            if (cameraPermission.state === 'granted' && microphonePermission.state === 'granted') {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                callUser(stream);
+            } else {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                callUser(stream);
+            }
         } catch (error) {
-          console.error('Error requesting permissions:', error);
+            console.error('Error requesting permissions:', error);
         }
-      };
-    
+    };
+
     return (
         <Container className='containerOptions'>
             <Paper elevation={10} className='paperOptions'>
@@ -39,7 +46,7 @@ const Options = ({ children }) => {
                             {callAccepted && !callEnded ? (
                                 <Button variant='contained' color='secondary' ref={connectionRef} startIcon={<PhoneDisabled fontSize="large" />} fullWidth onClick={leaveCall} className='marginOptions'>Zəngi bitir</Button>
                             ) : (
-                                <Button variant='contained' color='primary' startIcon={<Phone fontSize="large" />} fullWidth  onClick={() => requestPermissions(idToCall)} className='marginOptions'>
+                                <Button variant='contained' color='primary' startIcon={<Phone fontSize="large" />} fullWidth onClick={handleStartVideoCall} className='marginOptions'>
                                     Zəng Et
                                 </Button>
                             )}
