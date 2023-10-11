@@ -24,15 +24,15 @@ const Notifications = () => {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle>{call.name} is calling:</DialogTitle>
+            <DialogTitle>{call.name} zəng vurur:</DialogTitle>
             <DialogContent>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={handleAnswerCall}>
-                    Answer
+                    Cavab ver
                 </Button>
                 <Button variant="contained" color="secondary" onClick={handleClose}>
-                    Decline
+                    Zəngi bitir
                 </Button>
             </DialogActions>
         </Dialog>
